@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+declare -A extensions
+extensions[csv,xlsx,pdf,doc,txt]
+echo 'File extension?
+1. csv  2. xlsx 3. pdf  4. doc 5. txt'
+read choice
+then
+    file_extension=${extensions[$choice]}
+else
+    echo 'Extension must match options'
+    exit
+fi
+echo 'Try an extension file'
+read file_name
+touch ${file_name}.${file_extension}
+echo ${file_name}.${file_extension} created
+
+2.
+for file_name in ./random-data/*.csv;
+do
+    lines=$(head -n $1 $file_name)
+    rm $file_name
+    for line in $lines;
+    do
+        if [ ! -e $file_name ]
+        then
+            # storing file lines turns LF bytes into CR. tr turns the CR back into LF
+            echo -n $line | tr '\r' '\n' > $file_name
+        else
+            echo -n $line | tr '\r' '\n' >> $file_name
+        fi
+    done
+done
+
+crontab -e PATH=$HOME/.local/bin:$PATH
